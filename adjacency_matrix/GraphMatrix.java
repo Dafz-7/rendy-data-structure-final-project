@@ -1,5 +1,3 @@
-package com.mycompany.mavenproject6;
-
 import java.util.ArrayList;
 
 public class GraphMatrix {
@@ -9,21 +7,27 @@ public class GraphMatrix {
     private int size;
 
     public GraphMatrix(int maxCities) {
+
         cities = new ArrayList<>();
         matrix = new int[maxCities][maxCities];
         size = 0;
     }
 
     public void addLocation(String city) {
+
         cities.add(city);
         size++;
     }
 
     public int getIndex(String city) {
+
         return cities.indexOf(city);
     }
 
-    public void addRoad(String city1, String city2, int distance) {
+    public void addRoad(String city1,
+                        String city2,
+                        int distance) {
+
         int i = getIndex(city1);
         int j = getIndex(city2);
 
@@ -32,7 +36,9 @@ public class GraphMatrix {
     }
 
     public void displayGraph() {
+
         System.out.println("\nAdjacency Matrix:");
+
         System.out.print("      ");
 
         for (String city : cities) {
@@ -42,11 +48,15 @@ public class GraphMatrix {
         System.out.println();
 
         for (int i = 0; i < size; i++) {
+
             System.out.printf("%10s", cities.get(i));
 
             for (int j = 0; j < size; j++) {
-                System.out.printf("%10d", matrix[i][j]);
+
+                System.out.printf("%10d",
+                        matrix[i][j]);
             }
+
             System.out.println();
         }
     }
