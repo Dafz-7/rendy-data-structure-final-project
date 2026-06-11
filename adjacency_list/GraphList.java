@@ -1,44 +1,74 @@
-package com.mycompany.mavenproject5;
+package adjacency_list;
+
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class GraphList {
 
-    private final ArrayList<String> locations;
-    private final ArrayList<Edge> routes;
+    private final LinkedHashMap<String, ArrayList<Edge>> adjacencyList;
 
     public GraphList() {
-        locations = new ArrayList<>();
-        routes = new ArrayList<>();
+        adjacencyList = new LinkedHashMap<>();
     }
 
     public void addLocation(String location) {
-        locations.add(location);
+
+        adjacencyList.putIfAbsent(
+                location,
+                new ArrayList<>());
     }
 
-    public void addRoute(String source, String destination, int distance) {
-        routes.add(new Edge(source, destination, distance));
-        routes.add(new Edge(destination, source, distance));
+    public void addRoute(
+            String source,
+            String destination,
+            int distance) {
+
+        addLocation(source);
+        addLocation(destination);
+
+        adjacencyList.get(source)
+                .add(new Edge(
+                        destination,
+                        distance));
+
+        adjacencyList.get(destination)
+                .add(new Edge(
+                        source,
+                        distance));
     }
 
     public ArrayList<String> getLocations() {
-        return locations;
+
+        return new ArrayList<>(
+                adjacencyList.keySet());
     }
 
-    public ArrayList<Edge> getRoutes() {
-        return routes;
+    public List<Edge> getNeighbors(
+            String city) {
+
+        return adjacencyList.getOrDefault(
+                city,
+                new ArrayList<>());
     }
 
     public void displayGraph() {
-        System.out.println("Route Planning Graph:");
 
-        for (String location : locations) {
-            System.out.print(location + " -> ");
+        System.out.println(
+                "\nAdjacency List:");
 
-            for (Edge edge : routes) {
-                if (edge.source.equals(location)) {
-                    System.out.print(edge.destination +
-                            "(" + edge.distance + " km) ");
-                }
+        for (String city : adjacencyList.keySet()) {
+
+            System.out.print(
+                    city + " -> ");
+
+            for (Edge edge : adjacencyList.get(city)) {
+
+                System.out.print(
+                        edge.getDestination()
+                                + "("
+                                + edge.getDistance()
+                                + " km) ");
             }
 
             System.out.println();
@@ -46,14 +76,27 @@ public class GraphList {
     }
 
     public static class Edge {
-        String source;
-        String destination;
-        int distance;
 
-        public Edge(String source, String destination, int distance) {
-            this.source = source;
+        private final String destination;
+        private final int distance;
+
+        public Edge(
+                String destination,
+                int distance) {
+
             this.destination = destination;
+
             this.distance = distance;
+        }
+
+        public String getDestination() {
+
+            return destination;
+        }
+
+        public int getDistance() {
+
+            return distance;
         }
     }
 }

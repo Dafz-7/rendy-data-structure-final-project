@@ -1,4 +1,5 @@
-package com.mycompany.mavenproject5;
+package adjacency_list;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -6,95 +7,118 @@ import java.util.PriorityQueue;
 public class DijkstraList {
 
     static class Node {
+
         String city;
         int distance;
 
-        public Node(String city, int distance) {
+        public Node(
+                String city,
+                int distance) {
+
             this.city = city;
             this.distance = distance;
         }
     }
 
-    public static void shortestPath(GraphList graph, String start) {
+    public static void shortestPath(
+            GraphList graph,
+            String start) {
+
+        dijkstraInternal(
+                graph,
+                start,
+                false);
+    }
+
+    public static void shortestPathSilent(
+            GraphList graph,
+            String start) {
+
+        dijkstraInternal(
+                graph,
+                start,
+                true);
+    }
+
+    private static void dijkstraInternal(
+            GraphList graph,
+            String start,
+            boolean silent) {
+
+        if (!graph.getLocations()
+                .contains(start)) {
+
+            System.out.println(
+                    "Starting city not found.");
+
+            return;
+        }
 
         HashMap<String, Integer> distance = new HashMap<>();
 
         for (String city : graph.getLocations()) {
-            distance.put(city, Integer.MAX_VALUE);
+
+            distance.put(
+                    city,
+                    Integer.MAX_VALUE);
         }
 
         distance.put(start, 0);
 
-        PriorityQueue<Node> pq =
-                new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
+        PriorityQueue<Node> pq = new PriorityQueue<>(
+                Comparator.comparingInt(
+                        n -> n.distance));
 
-        pq.add(new Node(start, 0));
+        pq.add(
+                new Node(start, 0));
 
         while (!pq.isEmpty()) {
 
             Node current = pq.poll();
 
-            for (GraphList.Edge edge : graph.getRoutes()) {
+            if (current.distance > distance.get(
+                    current.city)) {
 
-                if (edge.source.equals(current.city)) {
+                continue;
+            }
 
-                    int newDistance =
-                            distance.get(current.city)
-                                    + edge.distance;
+            for (GraphList.Edge edge : graph.getNeighbors(
+                    current.city)) {
 
-                    if (newDistance < distance.get(edge.destination)) {
+                int newDistance = distance.get(
+                        current.city)
+                        + edge.getDistance();
 
-                        distance.put(edge.destination, newDistance);
+                if (newDistance < distance.get(
+                        edge.getDestination())) {
 
-                        pq.add(new Node(edge.destination, newDistance));
-                    }
+                    distance.put(
+                            edge.getDestination(),
+                            newDistance);
+
+                    pq.add(
+                            new Node(
+                                    edge.getDestination(),
+                                    newDistance));
                 }
             }
         }
 
-        System.out.println("\nShortest Distance from " + start);
+        if (!silent) {
 
-        for (String city : graph.getLocations()) {
-            System.out.println(start + " -> " + city + " = " +
-                    distance.get(city) + " km");
-        }
-    }
+            System.out.println(
+                    "\nShortest Distance from "
+                            + start);
 
-    // SILENT VERSION (for benchmark)
-    public static void shortestPathSilent(GraphList graph, String start) {
+            for (String city : graph.getLocations()) {
 
-        HashMap<String, Integer> distance = new HashMap<>();
-
-        for (String city : graph.getLocations()) {
-            distance.put(city, Integer.MAX_VALUE);
-        }
-
-        distance.put(start, 0);
-
-        PriorityQueue<Node> pq =
-                new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
-
-        pq.add(new Node(start, 0));
-
-        while (!pq.isEmpty()) {
-
-            Node current = pq.poll();
-
-            for (GraphList.Edge edge : graph.getRoutes()) {
-
-                if (edge.source.equals(current.city)) {
-
-                    int newDistance =
-                            distance.get(current.city)
-                                    + edge.distance;
-
-                    if (newDistance < distance.get(edge.destination)) {
-
-                        distance.put(edge.destination, newDistance);
-
-                        pq.add(new Node(edge.destination, newDistance));
-                    }
-                }
+                System.out.println(
+                        start
+                                + " -> "
+                                + city
+                                + " = "
+                                + distance.get(city)
+                                + " km");
             }
         }
     }

@@ -1,50 +1,69 @@
+package adjacency_matrix;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class BFSMatrix {
 
-public void traverse(GraphMatrix graph,
-                        String startCity) {
+    public void traverse(
+            GraphMatrix graph,
+            String startCity) {
 
-        int start =
-                graph.getIndex(startCity);
+        traverse(
+                graph,
+                startCity,
+                false);
+    }
 
-        boolean[] visited =
-                new boolean[graph.getSize()];
+    public void traverse(
+            GraphMatrix graph,
+            String startCity,
+            boolean silent) {
 
-        Queue<Integer> queue =
-                new LinkedList<>();
+        int start = graph.getIndex(startCity);
+
+        if (start == -1) {
+            return;
+        }
+
+        int size = graph.getSize();
+
+        int[][] matrix = graph.getMatrix();
+
+        boolean[] visited = new boolean[size];
+
+        Queue<Integer> queue = new LinkedList<>();
 
         visited[start] = true;
         queue.add(start);
 
-        System.out.println(
-                "\nBFS Traversal:"
-        );
+        if (!silent) {
+
+            System.out.println(
+                    "\nBFS Traversal:");
+        }
 
         while (!queue.isEmpty()) {
 
-        int current =
-                queue.poll();
+            int current = queue.poll();
 
-        System.out.println(
-                "Visited: "
-                + graph.getCities()
-                        .get(current)
-        );
+            if (!silent) {
 
-        for (int i = 0;
-                i < graph.getSize();
-                i++) {
+                System.out.println(
+                        "Visited: "
+                                + graph.getCities()
+                                        .get(current));
+            }
 
-                if (graph.getMatrix()
-                        [current][i] != 0
+            for (int i = 0; i < size; i++) {
+
+                if (matrix[current][i] != 0
                         && !visited[i]) {
 
-                visited[i] = true;
-                queue.add(i);
+                    visited[i] = true;
+                    queue.add(i);
                 }
+            }
         }
-        }
-}
+    }
 }

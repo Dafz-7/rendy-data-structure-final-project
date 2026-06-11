@@ -1,10 +1,13 @@
-package adjacency_list;
+package adjacency_matrix;
 
-public class BenchmarkList {
+public class BenchmarkMatrix {
 
-    public static void runBenchmark(GraphList graph) {
+    public static void runBenchmark(
+            GraphMatrix graph,
+            BFSMatrix bfs,
+            DijkstraMatrix dijkstra) {
 
-        if (graph.getLocations().isEmpty()) {
+        if (graph.getSize() == 0) {
 
             System.out.println(
                     "Graph is empty.");
@@ -14,15 +17,18 @@ public class BenchmarkList {
 
         int iterations = 100;
 
-        String startCity = graph.getLocations().get(0);
+        String startCity = graph.getCities().get(0);
+
+        String endCity = graph.getCities().get(
+                graph.getSize() - 1);
 
         System.out.println(
-                "\n--- ADJACENCY LIST RESULTS ---");
+                "\n--- ADJACENCY MATRIX RESULTS ---");
 
         for (int run = 1; run <= 3; run++) {
 
             System.out.println(
-                    "\n===== ADJACENCY LIST - RUN "
+                    "\n===== ADJACENCY MATRIX - RUN "
                             + run
                             + " =====");
 
@@ -30,9 +36,10 @@ public class BenchmarkList {
 
             for (int i = 0; i < iterations; i++) {
 
-                BFSList.bfsSilent(
+                bfs.traverse(
                         graph,
-                        startCity);
+                        startCity,
+                        true);
             }
 
             long bfsEnd = System.nanoTime();
@@ -41,9 +48,11 @@ public class BenchmarkList {
 
             for (int i = 0; i < iterations; i++) {
 
-                DijkstraList.shortestPathSilent(
+                dijkstra.shortestPath(
                         graph,
-                        startCity);
+                        startCity,
+                        endCity,
+                        true);
             }
 
             long dijkstraEnd = System.nanoTime();
