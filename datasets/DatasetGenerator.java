@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class DatasetGenerator {
-
+        // Generate a random graph dataset and save it to a CSV file
     public static void generate(
             String filename,
             int vertices,
@@ -15,10 +15,10 @@ public class DatasetGenerator {
         Random rand = new Random();
 
         FileWriter writer = new FileWriter(filename);
-
+        //Write the header line for the CSV file
         writer.write(
                 "source,destination,distance\n");
-
+        //Store existing edges to avoid duplicates
         HashSet<String> usedEdges = new HashSet<>();
 
         // Ensure graph connectivity
@@ -45,13 +45,13 @@ public class DatasetGenerator {
         }
 
         int currentEdges = vertices - 1;
-
+        // Add random edges until the number of edges reaches the specified count
         while (currentEdges < edges) {
 
             int sourceId = rand.nextInt(vertices) + 1;
 
             int destinationId = rand.nextInt(vertices) + 1;
-
+                //prevent self-loops and duplicate edges
             if (sourceId == destinationId) {
                 continue;
             }
@@ -62,7 +62,7 @@ public class DatasetGenerator {
 
             String edgeKey = source + "-"
                     + destination;
-
+            //skip if the edge already exists
             if (usedEdges.contains(
                     edgeKey)) {
 
@@ -88,7 +88,7 @@ public class DatasetGenerator {
         }
 
         writer.close();
-
+        //Display a message indicating that the dataset has been generated successfully
         System.out.println(
                 filename
                         + " generated successfully.");
@@ -98,7 +98,7 @@ public class DatasetGenerator {
             String[] args)
             throws IOException {
 
-        // Sparse
+        // Generate datasets for both sparse and dense graphs
         generate(
                 "small.csv",
                 100,
@@ -114,7 +114,7 @@ public class DatasetGenerator {
                 1000,
                 3000);
 
-        // Dense
+        // Generate dense graph datasets with a higher number of edges
         generate(
                 "dense_small.csv",
                 100,

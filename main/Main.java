@@ -13,13 +13,13 @@ import adjacency_matrix.DijkstraMatrix;
 import adjacency_matrix.BenchmarkMatrix;
 
 public class Main {
+        // Scanner for user input later in the program
+        private static final Scanner sc = new Scanner(System.in);
 
-    private static final Scanner sc = new Scanner(System.in);
-
-    public static void main(String[] args) {
-
+public static void main(String[] args) {
+        // Run the intelligent route system first
         intelligentRouteSystem();
-
+        // Then ask the user if they want to run benchmarks
         System.out.print(
                 "\nRun Benchmark Tests? (Y/N): ");
 
@@ -32,7 +32,7 @@ public class Main {
 
             return;
         }
-
+        // Run sparse graph benchmarks on all datasets
         System.out.println(
                 "\n=================================");
         System.out.println(
@@ -51,7 +51,7 @@ public class Main {
         runDataset(
                 "datasets/large.csv",
                 1000);
-
+        //run dense graph benchmarks on all datasets
         System.out.println(
                 "\n=================================");
         System.out.println(
@@ -74,11 +74,11 @@ public class Main {
         System.out.println(
                 "\nAll Benchmarks Completed.");
     }
-
+    // Method to run the intelligent route system
     private static void intelligentRouteSystem() {
 
         GraphMatrix graph = new GraphMatrix(100);
-
+        // Load the sparse_small dataset into the graph for the route system
         DatasetLoader.loadCSV(
                 "datasets/sparse_small.csv",
                 new GraphList(),
@@ -92,7 +92,7 @@ public class Main {
 
         System.out.println(
                 "=================================");
-
+        //display available cities to the user and prompt for start and destination cities
         System.out.println(
                 "\nAvailable Cities:");
 
@@ -103,7 +103,7 @@ public class Main {
         }
 
         System.out.println();
-
+        // Prompt user for start and destination cities
         System.out.print(
                 "\nEnter Start City: ");
 
@@ -113,7 +113,7 @@ public class Main {
                 "Enter Destination City: ");
 
         String destination = sc.nextLine();
-
+        //find and display the shortest path using Dijkstra's algorithm
         DijkstraMatrix dijkstra = new DijkstraMatrix();
 
         dijkstra.shortestPath(
@@ -124,7 +124,7 @@ public class Main {
         System.out.println(
                 "\n=================================");
     }
-
+    //load the dataset, measure memory usage for both graph representations, create the actual graphs, and run benchmarks
     private static void runDataset(
             String file,
             int maxCities) {
@@ -139,9 +139,8 @@ public class Main {
         Runtime runtime = Runtime.getRuntime();
 
         /*
-         * =========================
-         * ADJACENCY LIST MEMORY
-         * =========================
+        *measure memory usage for 
+        *adjacency list representation
          */
 
         runtime.gc();
@@ -164,9 +163,8 @@ public class Main {
         long listMemory = listAfter - listBefore;
 
         /*
-         * =========================
-         * ADJACENCY MATRIX MEMORY
-         * =========================
+         * Measure memory usage for
+        * adjacency matrix representation
          */
 
         runtime.gc();
@@ -187,7 +185,7 @@ public class Main {
                 - runtime.freeMemory();
 
         long matrixMemory = matrixAfter - matrixBefore;
-
+        // Display memory usage results to the user
         System.out.println(
                 "Adjacency List Memory: "
                         + formatMemory(
@@ -198,11 +196,7 @@ public class Main {
                         + formatMemory(
                                 matrixMemory));
 
-        /*
-         * =========================
-         * ACTUAL GRAPH CREATION
-         * =========================
-         */
+        // Create the actual graph representations for benchmarking
 
         GraphList graphList = new GraphList();
 
@@ -234,7 +228,7 @@ public class Main {
         System.out.println(
                 "\n=================================");
     }
-
+    // convert memory usage in bytes to a human-readable format (KB, MB, GB)
     private static String formatMemory(
             long bytes) {
 
